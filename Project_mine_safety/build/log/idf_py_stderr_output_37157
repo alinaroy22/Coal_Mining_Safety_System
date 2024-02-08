@@ -1,0 +1,20 @@
+Compiler supported targets: xtensa-esp32-elf
+
+CMake Error at /home/desd/esp/esp-idf/tools/cmake/component.cmake:479 (add_library):
+  Cannot find source file:
+
+    /home/desd/Project_mine_safety/components/DHT22/DHT22.c
+
+  Tried extensions .c .C .c++ .cc .cpp .cxx .cu .m .M .mm .h .hh .h++ .hm
+  .hpp .hxx .in .txx
+Call Stack (most recent call first):
+  components/DHT22/CMakeLists.txt:1 (idf_component_register)
+
+
+CMake Error at /home/desd/esp/esp-idf/tools/cmake/component.cmake:479 (add_library):
+  No SOURCES given to target: __idf_DHT22
+Call Stack (most recent call first):
+  components/DHT22/CMakeLists.txt:1 (idf_component_register)
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.
