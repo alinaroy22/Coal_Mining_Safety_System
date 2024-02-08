@@ -14,5 +14,11 @@
     "idf.port": "/dev/ttyUSB0",
     "idf.pythonBinPath": "/home/desd/.espressif/python_env/idf5.1_py3.8_env/bin/python",
     "idf.toolsPath": "/home/desd/.espressif",
-    "idf.flashType": "UART"
+    "idf.flashType": "UART",
+    "files.associations": {
+        "adc_cali.h": "c",
+        "adc.h": "c",
+        "adc_continuous.h": "c",
+        "gpio.h": "c"
+    }
 }

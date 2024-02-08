@@ -11,11 +11,11 @@
 
 // == function prototypes =======================================
 
-void 	setDHTgpio(int gpio);
-void 	errorHandler(int response);
-int 	readDHT();
-float 	getHumidity();
-float 	getTemperature();
-int 	getSignalLevel( int usTimeOut, bool state );
+void 	DHTsetgpio(int gpio);
+void 	DHTerrorHandler(int response);
+int 	DHTread();
+float 	DHTgetHumidity();
+float 	DHTgetTemperature();
+int 	DHTgetSignalLevel( int usTimeOut, bool state );
 
 #endif

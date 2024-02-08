@@ -32,19 +32,19 @@ float temperature = 0.;
 
 // == set the DHT used pin=========================================
 
-void setDHTgpio( int gpio )
+void DHTsetgpio( int gpio )
 {
 	DHTgpio = gpio;
 }
 
 // == get temp & hum =============================================
 
-float getHumidity() { return humidity; }
-float getTemperature() { return temperature; }
+float DHTgetHumidity() { return humidity; }
+float DHTgetTemperature() { return temperature; }
 
 // == error handler ===============================================
 
-void errorHandler(int response)
+void DHTerrorHandler(int response)
 {
 	switch(response) {
 	
@@ -73,7 +73,7 @@ void errorHandler(int response)
 ;
 ;--------------------------------------------------------------------------------*/
 
-int getSignalLevel( int usTimeOut, bool state )
+int DHTgetSignalLevel( int usTimeOut, bool state )
 {
 
 	int uSec = 0;
@@ -120,7 +120,7 @@ To request data from DHT:
 
 #define MAXdhtData 5	// to complete 40 = 5*8 Bits
 
-int readDHT()
+int DHTread()
 {
 int uSec = 0;
 
@@ -149,13 +149,13 @@ uint8_t bitInx = 7;
   
 	// == DHT will keep the line low for 80 us and then high for 80us ====
 
-	uSec = getSignalLevel( 85, 0 );
+	uSec = DHTgetSignalLevel( 85, 0 );
 //	ESP_LOGI( TAG, "Response = %d", uSec );
 	if( uSec<0 ) return DHT_TIMEOUT_ERROR; 
 
 	// -- 80us up ------------------------
 
-	uSec = getSignalLevel( 85, 1 );
+	uSec = DHTgetSignalLevel( 85, 1 );
 //	ESP_LOGI( TAG, "Response = %d", uSec );
 	if( uSec<0 ) return DHT_TIMEOUT_ERROR;
 
@@ -165,12 +165,12 @@ uint8_t bitInx = 7;
 
 		// -- starts new data transmission with >50us low signal
 
-		uSec = getSignalLevel( 56, 0 );
+		uSec = DHTgetSignalLevel( 56, 0 );
 		if( uSec<0 ) return DHT_TIMEOUT_ERROR;
 
 		// -- check to see if after >70us rx data is a 0 or a 1
 
-		uSec = getSignalLevel( 75, 1 );
+		uSec = DHTgetSignalLevel( 75, 1 );
 		if( uSec<0 ) return DHT_TIMEOUT_ERROR;
 
 		// add the current read to the output data
