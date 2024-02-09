@@ -29,12 +29,13 @@ static const char *TAG = "Gas Sensor";
 
 int MQ7gpio = 5; // my default MQ7 pin = 5
 float concentration = 0;
+float sensor_volt, RS_gas;
 
 // == set the MQ7 used pin=========================================
 
 void MQ7setgpio(int gpio)
 {
-	adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11);          //GPIO 33
+	adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11); // GPIO 33
 }
 
 // == get concentration =============================================
@@ -52,43 +53,12 @@ void MQ7errorHandler(int response)
 		ESP_LOGE(TAG, "Sensor Timeout\n");
 		break;
 
-	case MQ7_CHECKSUM_ERROR:
-		ESP_LOGE(TAG, "CheckSum error\n");
-		break;
-
 	case MQ7_OK:
 		break;
 
 	default:
 		ESP_LOGE(TAG, "Unknown error\n");
 	}
-}
-
-/*-------------------------------------------------------------------------------
-;
-;	get next state
-;
-;	I don't like this logic. It needs some interrupt blocking / priority
-;	to ensure it runs in realtime.
-;
-;--------------------------------------------------------------------------------*/
-
-int MQ7getSignalLevel(int usTimeOut, bool state)
-{
-
-	int uSec = 0;
-	while (gpio_get_level(MQ7gpio) == state)
-	{
-
-		if (uSec > usTimeOut)
-			return -1;
-
-		++uSec;
-		// ets_delay_us(1);		// uSec delay
-		esp_rom_delay_us(1);
-	}
-
-	return uSec;
 }
 
 /*----------------------------------------------------------------------------
@@ -98,12 +68,17 @@ int MQ7getSignalLevel(int usTimeOut, bool state)
 
 int MQ7read()
 {
+	concentration = adc1_get_raw(ADC1_CHANNEL_5);
+	//concentration = adc_cali_raw_to_voltage(adc1_get_raw(ADC1_CHANNEL_5), adc_chars);
 
-	//concentration = adc1_get_raw(ADC1_CHANNEL_5);
-	concentration = esp_adc_cal_raw_to_voltage(adc1_get_raw(ADC1_CHANNEL_5));
+	sensor_volt = concentration / 1024; // Measuring mq7 gas sensor voltage
+	printf("Sensor_ volt: %f \n", sensor_volt);
+	RS_gas = (5.0 - sensor_volt) / sensor_volt; // Calculating gas concentration
+	printf("Gas Concentration : %f \n", RS_gas);
+
 	if (concentration > 0)
 		return MQ7_OK;
 
 	else
-		return MQ7_CHECKSUM_ERROR;
+		return MQ7_TIMEOUT_ERROR;
 }
