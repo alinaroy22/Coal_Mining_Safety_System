@@ -150,14 +150,14 @@ uint8_t bitInx = 7;
 	// == DHT will keep the line low for 80 us and then high for 80us ====
 
 	uSec = DHTgetSignalLevel( 85, 0 );
-//	ESP_LOGI( TAG, "Response = %d", uSec );
+	//ESP_LOGI( TAG, "Response = %d", uSec );
 	if( uSec<0 ) return DHT_TIMEOUT_ERROR; 
 
 	// -- 80us up ------------------------
 
 	uSec = DHTgetSignalLevel( 85, 1 );
-//	ESP_LOGI( TAG, "Response = %d", uSec );
-	if( uSec<0 ) return DHT_TIMEOUT_ERROR;
+	ESP_LOGI( TAG, "Response = %d", uSec );
+	//if( uSec<0 ) return DHT_TIMEOUT_ERROR;
 
 	// == No errors, read the 40 data bits ================
   
@@ -166,12 +166,14 @@ uint8_t bitInx = 7;
 		// -- starts new data transmission with >50us low signal
 
 		uSec = DHTgetSignalLevel( 56, 0 );
-		if( uSec<0 ) return DHT_TIMEOUT_ERROR;
+		ESP_LOGI( TAG, "1-Response = %d", uSec );
+		//if( uSec<0 ) return DHT_TIMEOUT_ERROR;
 
 		// -- check to see if after >70us rx data is a 0 or a 1
 
 		uSec = DHTgetSignalLevel( 75, 1 );
-		if( uSec<0 ) return DHT_TIMEOUT_ERROR;
+		ESP_LOGI( TAG, "2-Response = %d", uSec );
+		//if( uSec<0 ) return DHT_TIMEOUT_ERROR;
 
 		// add the current read to the output data
 		// since all dhtData array where set to 0 at the start, 
@@ -207,6 +209,8 @@ uint8_t bitInx = 7;
 
 	// == verify if checksum is ok ===========================================
 	// Checksum is the sum of Data 8 bits masked out 0xFF
+	printf("temp=%.2f", temperature);
+	printf("h=%.2f\n", humidity);
 	
 	if (dhtData[4] == ((dhtData[0] + dhtData[1] + dhtData[2] + dhtData[3]) & 0xFF)) 
 		return DHT_OK;

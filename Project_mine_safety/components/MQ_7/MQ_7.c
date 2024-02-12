@@ -22,6 +22,11 @@
 #include "driver/adc.h"
 
 #include "MQ_7.h"
+#include <esp_err.h>
+
+
+#define VCC		5
+#define RL		10000
 
 // == global defines =============================================
 
@@ -34,13 +39,17 @@ float sensor_volt, RS_gas;
 // == set the MQ7 used pin=========================================
 
 void MQ7setgpio(int gpio)
-{
+{	
 	adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11); // GPIO 33
 }
 
 // == get concentration =============================================
 
-float MQ7getConcentration() { return concentration; }
+float MQ7getConcentration() 
+{ 
+	//return concentration;
+	return RS_gas; 
+}
 
 // == error handler ===============================================
 
@@ -68,13 +77,13 @@ void MQ7errorHandler(int response)
 
 int MQ7read()
 {
-	concentration = adc1_get_raw(ADC1_CHANNEL_5);
-	//concentration = adc_cali_raw_to_voltage(adc1_get_raw(ADC1_CHANNEL_5), adc_chars);
 
-	sensor_volt = concentration / 1024; // Measuring mq7 gas sensor voltage
+	concentration = adc1_get_raw(ADC1_CHANNEL_5);
+	
+	sensor_volt = concentration / RL; // Measuring mq7 gas sensor voltage
 	printf("Sensor_ volt: %f \n", sensor_volt);
-	RS_gas = (5.0 - sensor_volt) / sensor_volt; // Calculating gas concentration
-	printf("Gas Concentration : %f \n", RS_gas);
+	RS_gas = (VCC - sensor_volt) / sensor_volt; // Calculating gas concentration
+	printf("Gas Concentration : %f \n", RS_gas); 
 
 	if (concentration > 0)
 		return MQ7_OK;
