@@ -1,14 +1,6 @@
 /*------------------------------------------------------------------------------
 	DHT22 temperature & humidity sensor AM2302 (DHT22) driver for ESP32
-	Jun 2017:	Ricardo Timmermann, new for DHT22  	
-	Code Based on Adafruit Industries and Sam Johnston and Coffe & Beer. Please help
-	to improve this code. 
 	
-	This example code is in the Public Domain (or CC0 licensed, at your option.)
-	Unless required by applicable law or agreed to in writing, this
-	software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-	CONDITIONS OF ANY KIND, either express or implied.
-	PLEASE KEEP THIS CODE IN LESS THAN 0XFF LINES. EACH LINE MAY CONTAIN ONE BUG !!!
 ---------------------------------------------------------------------------------*/
 
 #define LOG_LOCAL_LEVEL ESP_LOG_VERBOSE
@@ -156,8 +148,8 @@ uint8_t bitInx = 7;
 	// -- 80us up ------------------------
 
 	uSec = DHTgetSignalLevel( 85, 1 );
-	ESP_LOGI( TAG, "Response = %d", uSec );
-	//if( uSec<0 ) return DHT_TIMEOUT_ERROR;
+	//ESP_LOGI( TAG, "Response = %d", uSec );
+	if( uSec<0 ) return DHT_TIMEOUT_ERROR;
 
 	// == No errors, read the 40 data bits ================
   
@@ -166,14 +158,14 @@ uint8_t bitInx = 7;
 		// -- starts new data transmission with >50us low signal
 
 		uSec = DHTgetSignalLevel( 56, 0 );
-		ESP_LOGI( TAG, "1-Response = %d", uSec );
-		//if( uSec<0 ) return DHT_TIMEOUT_ERROR;
+		//ESP_LOGI( TAG, "1-Response = %d", uSec );
+		if( uSec<0 ) return DHT_TIMEOUT_ERROR;
 
 		// -- check to see if after >70us rx data is a 0 or a 1
 
 		uSec = DHTgetSignalLevel( 75, 1 );
-		ESP_LOGI( TAG, "2-Response = %d", uSec );
-		//if( uSec<0 ) return DHT_TIMEOUT_ERROR;
+		//ESP_LOGI( TAG, "2-Response = %d", uSec );
+		if( uSec<0 ) return DHT_TIMEOUT_ERROR;
 
 		// add the current read to the output data
 		// since all dhtData array where set to 0 at the start, 

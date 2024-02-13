@@ -29,7 +29,7 @@
 #define ALERT_SET		(1)
 #define ALERT_RESET		(0)
 #define	DELAY			(15000)
-#define TMP_THRES		(25)
+#define TMP_THRES		(45)
 #define	HUMID_THRES		(70)
 #define CO_THRES		(100)
 
@@ -58,31 +58,29 @@ static void mqtt_app_start(void);
 static void wifi_event_handler(void *arg, esp_event_base_t event_base,
                                     int32_t event_id, void *event_data)
 {
-    switch (event_id)
-    {
-    case WIFI_EVENT_STA_START:
-        esp_wifi_connect();
-        printf("Trying to connect with Wi-Fi\n");
-        break;
+    switch (event_id) {
+        case WIFI_EVENT_STA_START:
+            esp_wifi_connect();
+            printf("Trying to connect with Wi-Fi\n");
+            break;
 
-    case WIFI_EVENT_STA_CONNECTED:
-        printf("Wi-Fi connected\n");
-        break;
+        case WIFI_EVENT_STA_CONNECTED:
+            printf("Wi-Fi connected\n");
+            break;
 
-    case IP_EVENT_STA_GOT_IP:
-        printf("got ip: startibg MQTT Client\n");
-        mqtt_app_start();
-        break;
+        case IP_EVENT_STA_GOT_IP:
+            printf("got ip: startibg MQTT Client\n");
+            mqtt_app_start();
+            break;
 
-    case WIFI_EVENT_STA_DISCONNECTED:
-        printf("disconnected: Retrying Wi-Fi\n");
-        esp_wifi_connect();
-        break;
+        case WIFI_EVENT_STA_DISCONNECTED:
+            printf("disconnected: Retrying Wi-Fi\n");
+            esp_wifi_connect();
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
-    //return ESP_OK;
 }
 
 static void wifi_connection()
@@ -116,24 +114,22 @@ static void wifi_connection()
 
 static esp_err_t mqtt_event_handler_cb(esp_mqtt_event_handle_t event)
 {
-    //esp_mqtt_client_handle_t client = event->client;
-    switch (event->event_id)
-    {
-    case MQTT_EVENT_CONNECTED:
-        printf("MQTT_EVENT_CONNECTED\n");
-        MQTT_CONNECTED = 1;
-        break;
+    switch (event->event_id) {
+        case MQTT_EVENT_CONNECTED:
+            printf("MQTT_EVENT_CONNECTED\n");
+            MQTT_CONNECTED = 1;
+            break;
 
-    case MQTT_EVENT_DISCONNECTED:
-        printf("MQTT_EVENT_DISCONNECTED\n");
-        MQTT_CONNECTED = 0;
-        break;
-    case MQTT_EVENT_PUBLISHED:
-        printf("MQTT_EVENT_PUBLISHED, msg_id=%d\n", event->msg_id);
-        break;
-    default:
-        printf("Other event id:%d", event->event_id);
-        break;
+        case MQTT_EVENT_DISCONNECTED:
+            printf("MQTT_EVENT_DISCONNECTED\n");
+            MQTT_CONNECTED = 0;
+            break;
+        case MQTT_EVENT_PUBLISHED:
+            printf("MQTT_EVENT_PUBLISHED, msg_id=%d\n", event->msg_id);
+            break;
+        default:
+            printf("Other event id:%d", event->event_id);
+            break;
     }
     return ESP_OK;
 }
@@ -150,8 +146,8 @@ static void mqtt_app_start(void)
     
     esp_mqtt_client_config_t mqtt_cfg = {
         .broker.address = {
-                .uri = "mqtt://demo.thingsboard.io",
-                .port = 1883,
+            .uri = "mqtt://demo.thingsboard.io",
+            .port = 1883,
         },
         .credentials.username = "coal_mining_token",     
     };
@@ -161,14 +157,14 @@ static void mqtt_app_start(void)
     esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event_handler, client);
     esp_mqtt_client_start(client);
     //xTaskCreate(Publisher_Task, "Publisher_Task", 1024 * 5, NULL, 5, NULL);
-    printf("MQTT Publisher_Task is up and running\n");
+    //printf("MQTT Publisher_Task is up and running\n");
 }
 
 void DHT_reader_task(void *pvParameter)
 {
-		DHTsetgpio(GPIO_NUM_27);
-        TickType_t wokenTime = xTaskGetTickCount();
-		uint8_t count = 0;
+    DHTsetgpio(GPIO_NUM_27);
+    TickType_t wokenTime = xTaskGetTickCount();
+    uint8_t count = 0;
 
 	while(1) {
 	
