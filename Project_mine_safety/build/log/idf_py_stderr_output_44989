@@ -1,1 +1,0 @@
-ninja: error: '../components/DHT22/DHT22.c', needed by 'esp-idf/DHT22/CMakeFiles/__idf_DHT22.dir/DHT22.c.obj', missing and no known rule to make it
